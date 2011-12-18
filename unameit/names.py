@@ -51,6 +51,9 @@ def capitalize( s ):
     """
 
     def cb(mo):
+        """
+        Leaves all upper case words unchanged, otherwise capitalizes the word.
+        """
         group = mo.group(0)
 
         if group.isupper():
