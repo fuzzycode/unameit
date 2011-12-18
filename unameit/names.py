@@ -22,9 +22,10 @@ Module managing file names and file names related functions.
 import re
 import logging
 
-logger = logging.getLogger( __name__ )
+logger = logging.getLogger(__name__)  # pylint: disable=C0103
 
-def clean_name( name ):
+
+def clean_name(name):
     """
     :param name: The name to be cleaned
     :return: string.
@@ -33,12 +34,13 @@ def clean_name( name ):
     within decimal numbers.
     """
 
-    new_name, num_subs = re.subn( r'(?<!\d)[\._]|[\._]$|^[\._]', ' ', name )
+    new_name, num_subs = re.subn(r'(?<!\d)[\._]|[\._]$|^[\._]', ' ', name)
     if num_subs:
         logger.debug("Changed string {0} => {1}".format(name, new_name))
     return new_name.strip()
 
-def capitalize( s ):
+
+def capitalize(string):
     """
     A modified version of the solution found in the Python
     `documentation
@@ -46,20 +48,19 @@ def capitalize( s ):
 
     Words in all UPPERCASE are left unchanged.
 
-    :param s: The string to be capitalized
+    :param string: The string to be capitalized
     :return: The capitalized string
     """
 
-    def cb(mo):
+    def _callback(match_object):
         """
         Leaves all upper case words unchanged, otherwise capitalizes the word.
         """
-        group = mo.group(0)
+        group = match_object.group(0)
 
         if group.isupper():
             return group
         else:
             return group[0].upper() + group[1:].lower()
 
-    return re.sub(r"[A-Za-z]+('[A-Za-z]+)?", cb, s)
-
+    return re.sub(r"[A-Za-z]+('[A-Za-z]+)?", _callback, string)

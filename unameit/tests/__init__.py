@@ -14,29 +14,3 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-"""
-A flexible and easy to use tool for renaming media files.
-"""
-
-from __future__ import absolute_import, print_function, unicode_literals
-
-import logging
-
-try:
-    from logging import NullHandler
-except ImportError:
-    from unameit.backport import NullHandler
-
-__NAME__ = "unameit"
-__AUTHOR__ = "Björn Larsson"
-__EMAIL__ = "develop@bjornlarsson.net"
-__VERSION__ = (0, 1, 0)
-
-
-def version():
-    """Returns the version as a string"""
-    return '.'.join([str(d) for d in __VERSION__])
-
-# Make sure that we have a null handler on the base logger for the package
-logging.getLogger(__name__).addHandler(NullHandler())

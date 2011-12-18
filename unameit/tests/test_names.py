@@ -49,20 +49,21 @@ class TestCapitalize(unittest.TestCase):
     def test_capitalize(self):
         """Letters should be properly capitalized"""
         self.assertEqual(names.capitalize("they're bill's friends"),
-                                  "They're Bill's Friends")
+            "They're Bill's Friends")
 
         self.assertEqual(names.capitalize("hello world. My name is"),
-                "Hello World. My Name Is")
+            "Hello World. My Name Is")
 
         self.assertEqual(names.capitalize("Hello"), "Hello")
 
     def test_all_capitals(self):
         """Words in all uppercase should not be changed"""
 
-        self.assertEqual(names.capitalize("Born in the USA"), "Born In The USA")
-        self.assertEqual(names.capitalize( "USA-EU cooperation is OK"),
-                                  "USA-EU Cooperation Is OK")
+        self.assertEqual(names.capitalize("Born in the USA"),
+            "Born In The USA")
+        self.assertEqual(names.capitalize("USA-EU cooperation is OK"),
+            "USA-EU Cooperation Is OK")
 
 
 if __name__ == "__main__":
-    sys.exit( unittest.main() )
+    sys.exit(unittest.main())
