@@ -27,7 +27,8 @@ import tempfile
 
 from unameit import __NAME__, version
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)  # pylint: disable=C0103
+
 
 class ParserGroup(object):
     """
@@ -48,7 +49,7 @@ class ParserGroup(object):
     def __enter__(self):
         return self.group
 
-    def __exit__(self):
+    def __exit__(self, *args, **kwargs):
         self.parser.add_option_group(self.group)
 
 
@@ -61,22 +62,28 @@ def get_parser():
     """
     parser = optparse.OptionParser(usage="%prog [options]", version=version())
 
-    with ParserGroup(parser, "Logging") as g:
-        g.add_option('-f', '--log-file', meta="FILE", action="store",
+    with ParserGroup(parser, "Logging") as group:
+        tmp_dir = tempfile.gettempdir()
+        group.add_option('-f', '--log-file', metavar="FILE", action="store",
             dest="log_file", help="The logfile to use",
-            default=os.path.join(
-                tempfile.gettempdir(), "{0}.log".format(__NAME__)))
-        g.add_option('-o', '--std-out', action="store_true", dest='use_stdout',
-            default=False, help="If set, also log to stdout.")
-        g.add_option('-v', action="store_true", dest="verbose", default=False,
+            default=os.path.join(tmp_dir, "{0}.log".format(__NAME__)))
+
+        group.add_option('-o', '--std-out', action="store_true",
+            dest='use_stdout', default=False,
+            help="If set, also log to stdout.")
+
+        group.add_option('-v', action="store_const", dest="level",
+            const=logging.DEBUG, default=logging.INFO,
             help="Print extra information. Useful for debugging.")
-        g.add_option('-q', action="store_false", dest="verbose", default=False,
+
+        group.add_option('-q', action="store_const", dest="level",
+            const=logging.WARNING, default=logging.INFO,
             help="Print less information")
 
-    with ParserGroup(parser, "Config") as g:
-        g.add_option("-C", "--config", action="append", dest="configs",
-            meta="FILE", help="Add a config file to use. Can be specified "\
-                              "multiple times to add more files. Can be an "\
-                              "absolute or relative path.")
+    with ParserGroup(parser, "Config") as group:
+        group.add_option("-C", "--config", action="append", dest="configs",
+            metavar="FILE", default=[],
+            help="Add a config file to use. Can be specified multiple times "\
+                 "to add more files. Can be an absolute or relative path.")
 
     return parser

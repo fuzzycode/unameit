@@ -24,7 +24,8 @@ import collections
 
 from unameit.utils import Borg
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)  # pylint: disable=C0103
+
 
 class Options(collections.Mapping, Borg):
     """

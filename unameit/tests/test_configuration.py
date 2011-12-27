@@ -15,11 +15,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import with_statement
+
 import unittest
 import sys
 import os
 
 from unameit.configuration import _merge, _read_file, read, ConfigError
+
+
+class WorkingDir(object):
+    def __init__(self, dir):
+        self._dir = dir
+        self._old = os.getcwd()
+        os.chdir(self._dir)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args, **kwargs):
+        os.chdir(self._old)
+
 
 class TestMerge(unittest.TestCase):
     """Tests the merging of two dictionaries"""
@@ -83,8 +99,8 @@ class TestReadFile(unittest.TestCase):
 
     def setUp(self):
         super(TestReadFile, self).setUp()
-        self.data_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "data"))
+        self.path = os.path.abspath(os.path.dirname(__file__))
+        self.data_path = os.path.join(self.path, "data")
 
     def test_reading(self):
         """It should be possible to read a config file"""
@@ -107,7 +123,6 @@ class TestReadFile(unittest.TestCase):
         config = os.path.join(self.data_path, "first_config.cfg")
         self.assertRaises(ConfigError, _read_file, config)
 
-
     def test_non_absolute_path(self):
         """Function should raise an error if path is not absolute"""
         self.assertRaises(AssertionError, _read_file, "first_conf.cfg")
@@ -118,8 +133,8 @@ class TestReadFiles(unittest.TestCase):
 
     def setUp(self):
         super(TestReadFiles, self).setUp()
-        self.data_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "data"))
+        self.path = os.path.abspath(os.path.dirname(__file__))
+        self.data_path = os.path.join(self.path, "data")
 
     def test_single_file(self):
         """
@@ -152,8 +167,9 @@ class TestReadFiles(unittest.TestCase):
 
     def test_relative_path(self):
         """It should be possible to load files with a relative path"""
-        data = read("./data/first_conf.cfg")
-        self.assertEqual(len(data), 1)
+        with WorkingDir(self.path):
+            data = read("./data/first_conf.cfg")
+            self.assertEqual(len(data), 1)
 
 #Run all tests
 if __name__ == "__main__":

@@ -20,6 +20,7 @@ A utility module wrapping up those odd bits and pieces that don't fit
 elsewhere and should not be exposed in the public interface of the package.
 """
 
+
 class Borg(object):
     """
     The Borg implementation suggested at:

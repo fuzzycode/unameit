@@ -23,11 +23,13 @@ Provides functionality to read and merge the config files and to validate the
 
 import logging
 import os
+import sys
 import yaml
 
 __all__ = ['Group', 'read', 'validate', 'ConfigError']
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)  # pylint: disable=C0103
+
 
 class ConfigError(Exception):
     """Raised if there were errors reading a configuration file"""
@@ -74,7 +76,12 @@ def read(files):
     """
 
     #Make sure that we have an iterable containing at least 1 file
-    if not hasattr(files, "__iter__"):
+    if sys.version_info < (3, 0):
+        strings = (str, unicode)
+    else:
+        strings = (str, )
+
+    if type(files) in strings:
         files = [files]
 
     logger.debug("Processing {0} files".format(len(files)))
@@ -113,8 +120,8 @@ def read(files):
     return groups
 
 
-def validate(required, data):
-    pass
+#def validate(required, data):
+#    pass
 
 
 def _read_file(path):
@@ -128,6 +135,7 @@ def _read_file(path):
     Raises :class:`ConfigError` if the file is not found or if it containes
     formatting errors.
     """
+
     assert os.path.isabs(path), "Path should be absolute"
 
     try:
@@ -136,10 +144,10 @@ def _read_file(path):
     except IOError:
         logger.error("Unable to read {0}".format(path))
         raise ConfigError("Unable to read {0}".format(path))
-    except yaml.YAMLError as e:
-        if hasattr(e, "problem_mark"):
-            line = e.problem_mark.line + 1
-            column = e.problem_mark.column + 1
+    except yaml.YAMLError as error:
+        if hasattr(error, "problem_mark"):
+            line = error.problem_mark.line + 1
+            column = error.problem_mark.column + 1
             logger.error("Problem found in {0} at ({1} : {2})".
             format(path, line, column))
         else:
@@ -174,6 +182,3 @@ def _merge(left, right):
         right = list(set(right))
 
     return right
-
-
-

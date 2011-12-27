@@ -38,7 +38,7 @@ setup(
     author_email=__EMAIL__,
     license="GPLv3",
     platforms=["any"],
-    install_requires=["pytvdbapi, pyaml"],
+    install_requires=["pytvdbapi", "PyYAML"],
     packages=find_packages(),
     test_suite='unameit.tests',
     description="A flexible and easy to use tool for renaming media files.",
