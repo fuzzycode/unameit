@@ -54,6 +54,25 @@ class Group(object):
 
 
 def read(files):
+    """
+    :param files: A path or an iterable of paths to read
+    :return: A list of :class:`Group` objects. Could be empty
+
+    Takes a string or a list/tuple of strings to be file paths.
+
+    Files are precessed in the order provided and later values will overwrite
+    previous values.
+
+    Files that are not found will be ignored so it is possible to provide a
+    list of default locations to look in and any files not found are
+    automatically ignored.
+
+    The function returns a list of :class:`Group` objects. The default
+    section of a file will not be included in the result. If selected in the
+    config file, the group will be merged with the default section before
+    returning.
+    """
+
     #Make sure that we have an iterable containing at least 1 file
     if not hasattr(files, "__iter__"):
         files = [files]
@@ -99,6 +118,16 @@ def validate(required, data):
 
 
 def _read_file(path):
+    """
+    :param path: The absolute path to the file to load
+    :return: A dictionary
+    :raise: :class:`ConfigError`
+
+    Reads a YAML formatted file and returns the data as a dictionary.
+
+    Raises :class:`ConfigError` if the file is not found or if it containes
+    formatting errors.
+    """
     assert os.path.isabs(path), "Path should be absolute"
 
     try:
