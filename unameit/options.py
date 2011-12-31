@@ -35,6 +35,7 @@ class Options(collections.Mapping, Borg):
 
     def __init__(self, **kwargs):
         super(Options, self).__init__()
+
         if not hasattr(self, "_data"):
             logger.debug("No data found, creating new")
             self._data = dict(kwargs)
@@ -42,10 +43,14 @@ class Options(collections.Mapping, Borg):
             logger.debug("Extending existing data")
             self._data.update(kwargs)
 
-    def __len__(self):
+    def clear(self):
+        """Resets all data for all Options instances"""
+        self._data = dict()
+
+    def __len__(self, *args, **kwargs):
         return len(self._data)
 
-    def __iter__(self):
+    def __iter__(self, *args, **kwargs):
         return iter(self._data)
 
     def __getitem__(self, item):
