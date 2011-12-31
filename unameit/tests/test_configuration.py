@@ -171,6 +171,38 @@ class TestReadFiles(unittest.TestCase):
             data = read("./data/first_conf.cfg")
             self.assertEqual(len(data), 1)
 
+
+class TestGroup(unittest.TestCase):
+    def setUp(self):
+        super(TestGroup, self).setUp()
+        self.path = os.path.abspath(os.path.dirname(__file__))
+        self.data_path = os.path.join(self.path, "data")
+
+    def test_attribute(self):
+        """It should be able to access the attributes of the group"""
+        config = os.path.join(self.data_path, "first_conf.cfg")
+        data = read(config)
+        group = data[0]
+
+        self.assertEqual(group.input, "/etc/")
+        self.assertEqual(group.language, "en")
+
+    def test_invalid_attribute(self):
+        """
+        The group should raise AttributeError when accessing invalid
+        attributes
+        """
+        config = os.path.join(self.data_path, "first_conf.cfg")
+        data = read(config)
+        group = data[0]
+
+        self.assertRaises(AttributeError, group.__getattr__, "foo")
+        self.assertRaises(AttributeError, group.__getattr__, "bar")
+
+    def test_representation(self):
+        """The group representation should be properly formatted"""
+
+
 #Run all tests
 if __name__ == "__main__":
     sys.exit(unittest.main())
