@@ -15,6 +15,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import unittest
+import sys
+from unameit.main import main
 
 class TestMain(unittest.TestCase):
-    pass
+    def test_main(self):
+        """Test standard main execution"""
+        result = main()
+        self.assertEqual(result, 0)
+
+#Run all tests
+if __name__ == "__main__":
+    sys.exit(unittest.main())
