@@ -15,6 +15,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import unittest
+import optparse
+import sys
+from unameit.parser import get_parser
 
 class TestParser(unittest.TestCase):
-    pass
+    def test_parser(self):
+        """It should be possible to get a parser object"""
+        parser = get_parser()
+
+        self.assertEqual(isinstance(parser, optparse.OptionParser), True)
+
+        _, __ = parser.parse_args()
+
+
+#Run all tests
+if __name__ == "__main__":
+    sys.exit(unittest.main())
