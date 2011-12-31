@@ -76,6 +76,7 @@ def read(files):
     """
 
     #Make sure that we have an iterable containing at least 1 file
+    #TODO: There should be a more pythonic way to do this
     if sys.version_info < (3, 0):
         strings = (str, unicode)
     else:
